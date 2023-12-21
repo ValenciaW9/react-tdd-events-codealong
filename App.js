@@ -1,7 +1,11 @@
 import { useState } from "react";
 
 function App() {
-  const [checkboxChecked, setCheckboxChecked] = useState(false);
+  const [pepperoniIsChecked, setPepperoniIsChecked] = useState(false);
+
+  function togglePepperoni(e) {
+    setPepperoniIsChecked(e.target.checked);
+  }
 
   return (
     <div>
@@ -9,16 +13,16 @@ function App() {
       <input
         type="checkbox"
         id="pepperoni"
-        checked={checkboxChecked}
-        aria-checked={checkboxChecked}
-        onChange={() => setCheckboxChecked(!checkboxChecked)}
+        checked={pepperoniIsChecked}
+        aria-checked={pepperoniIsChecked}
+        onChange={togglePepperoni}
       />
       <label htmlFor="pepperoni">Add pepperoni</label>
 
       <h2>Your Toppings:</h2>
       <ul>
         <li>Cheese</li>
-        {checkboxChecked && <li>Pepperoni</li>}
+        {pepperoniIsChecked ? <li>Pepperoni</li> : null}
       </ul>
     </div>
   );
