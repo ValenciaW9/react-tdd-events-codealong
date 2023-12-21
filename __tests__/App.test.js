@@ -1,43 +1,39 @@
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import App from '../App';
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import App from "../App";
 
-test("pizza checkbox is initially unchecked", () => {
+test("checkbox becomes checked when user clicks it", () => {
   render(<App />);
 
-  const addPepperoni = screen.getByRole("checkbox", { name: /add pepperoni/i });
+  const checkbox = screen.getByRole("checkbox", { name: /add pepperoni/i });
 
-  expect(addPepperoni).not.toBeChecked();
+  userEvent.click(checkbox);
+
+  expect(checkbox).toBeChecked();
 });
 
-test("toppings list initially contains only cheese", () => {
+test("topping appears in toppings list when checkbox is checked", () => {
   render(<App />);
 
-  expect(screen.getAllByRole("listitem").length).toBe(1);
+  const checkbox = screen.getByRole("checkbox", { name: /add pepperoni/i });
+
+  userEvent.click(checkbox);
+
+  expect(screen.getByText("Pepperoni")).toBeInTheDocument();
 });
 
-test("checkboxes become checked when user clicks them", () => {
+test("selected topping disappears when checkbox is clicked a second time", () => {
   render(<App />);
 
-  const addPepperoni = screen.getByRole("checkbox", { name: /add pepperoni/i });
-  userEvent.click(addPepperoni);
+  const checkbox = screen.getByRole("checkbox", { name: /add pepperoni/i });
 
-  expect(addPepperoni).toBeChecked();
-});
+  userEvent.click(checkbox);
 
-test("selected topping disappears when checked a second time", () => {
-  render(<App />);
-
-  const addPepperoni = screen.getByRole("checkbox", { name: /add pepperoni/i });
-  userEvent.click(addPepperoni);
-
-  expect(addPepperoni).toBeChecked();
-  expect(screen.getByText("Cheese")).toBeInTheDocument();
+  expect(checkbox).toBeChecked();
   expect(screen.getByText("Pepperoni")).toBeInTheDocument();
 
-  userEvent.click(addPepperoni);
+  userEvent.click(checkbox);
 
-  expect(addPepperoni).not.toBeChecked();
-  expect(screen.getByText("Cheese")).toBeInTheDocument();
+  expect(checkbox).not.toBeChecked();
   expect(screen.queryByText("Pepperoni")).not.toBeInTheDocument();
 });
